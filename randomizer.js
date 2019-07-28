@@ -59,14 +59,18 @@ function randomizePack(pack, restoreLostCategories = false) {
     shuffleArray(assignableColor)
     shuffleArray(categories)
     var foundCategories = []
+    var lostCategories = []
     for (var i = 0; i < categoryCount; i++) {
         foundCategories.push(assignable.shift())
         toReturn += foundCategories[i] + categories.shift() + "\n"
     }
     for (var i = 0; i < startCount; i++) {
-        toReturn += assignable.shift() + assignableColor.shift() + "\n"
+        var curCategory = assignableColor.shift()
+        toReturn += assignable.shift() + curCategory + "\n"
+        if (!(foundCategories.includes(curCategory.slice(1, -1))) || !(lostCategories.includes(curCategory.slice(1, -1)))) {
+            lostCategories.push(curCategory.slice(1, -1))
+        }
     }
-    var lostCategories = []
     for (var i in assignableColor) {
         toReturn += `${assignable.shift()} + ${assignable.shift()} = ${assignable.shift()}${assignableColor[i]}\n`
         if (!(foundCategories.includes(assignableColor[i].slice(1, -1))) || !(lostCategories.includes(assignableColor[i].slice(1, -1)))) {
