@@ -4,7 +4,16 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
-function randomizePack(pack) {
+
+function randomHex() {
+    var hex = "#"
+    for (var i = 0; i < 6; i++) {
+        hex += [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F"][Math.round(Math.random() * 15)]
+    }
+    return hex
+}
+
+function randomizePack(pack, restoreLostCategories = false) {
     var toReturn = ""
     var packLines = pack.split(/\n/);
     var sanitizedPackLines = [];
@@ -46,20 +55,28 @@ function randomizePack(pack) {
                 }
             }
             return categories
-        })()) {
-    }
+        })()) {}
     shuffleArray(assignableColor)
     shuffleArray(categories)
+    var foundCategories = []
     for (var i = 0; i < categoryCount; i++) {
-        toReturn += assignable.shift() + categories.shift() + "\n"
+        foundCategories.push(assignable.shift())
+        toReturn += foundCategories[i] + categories.shift() + "\n"
     }
     for (var i = 0; i < startCount; i++) {
         toReturn += assignable.shift() + assignableColor.shift() + "\n"
     }
-    return (function () {
-        for (var i in assignableColor) {
-            toReturn += `${assignable.shift()} + ${assignable.shift()} = ${assignable.shift()}${assignableColor[i]}\n`
+    var lostCategories = []
+    for (var i in assignableColor) {
+        toReturn += `${assignable.shift()} + ${assignable.shift()} = ${assignable.shift()}${assignableColor[i]}\n`
+        if (!(foundCategories.includes(assignableColor[i].slice(1, -1))) || !(lostCategories.includes(assignableColor[i].slice(1, -1)))) {
+            lostCategories.push(assignableColor[i].slice(1,-1))
         }
-        return toReturn
-    })()
+    }
+    if (restoreLostCategories) {
+        for (var i in lostCategories) {
+            toReturn = `${lostCategories[i]}: ${randomHex()}\n` + toReturn
+        }
+    }
+    return toReturn
 }
