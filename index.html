@@ -9,7 +9,7 @@
 </head>
 <body>
     <textarea id="input">Your pack here(No pack codes support)</textarea>
-    <p><button onclick="document.getElementById(`output`).value = randomizePack(document.getElementById(`input`).value,document.getElementById(`categories`).checked)">Randomize!</button><input type="checkbox" id="categories">Add undefined categories(Not true random)</p>
+    <p><button onclick="document.getElementById(`output`).value = randomizePack(document.getElementById(`input`).value,true)">Randomize!</button>
     <p><textarea id="output" readonly></textarea></p>
     <script src="randomizer.js"></script>
 </body>
